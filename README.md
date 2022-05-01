@@ -2,7 +2,7 @@
 # MEEP
 Meet new people who share the same interests and hobbies!
 
-![Meep-Logo](./assets/logo.png)
+![Meep-Logo](./assets/badlogo.png)
   
 ## Meep has been deployed online! 
 ### Visit these sites to demo Meep in mobile and web-app formats

@@ -34,7 +34,7 @@ export const filterByGender = (currentGender, users) => {
 export const filterByDistance = (currentDistance, users) => {
   if (currentDistance != -1) {
     return users.filter((user) => {
-      return user.localisation <= currentDistance
+      return user.distance <= currentDistance
     })
   } else return users
 }
