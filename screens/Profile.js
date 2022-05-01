@@ -9,7 +9,8 @@ import DatePicker from 'react-native-neat-date-picker';
 import Modal from "react-native-modal";
 import '../components/Styles';
 
-// Default function used in case of errors for getting the initials of the name.
+import DropDownPicker from 'react-native-dropdown-picker'
+import { stringify } from "@firebase/util";
 
 function nameToInitials(firstName, lastName) {
   return `${firstName[0]}${lastName[0]}`
@@ -19,8 +20,117 @@ function nameToInitials(firstName, lastName) {
 const GENDERS = [
   { label: 'Male', value: 'Male' },
   { label: 'Female', value: 'Female' },
-  { label: 'Other', value: 'Other' }];
-
+  { label: 'Non-Binary', value: 'Non-binary' },
+  { label: 'Other', value: 'Other' },
+  { label: 'I prefer not to say', value: 'NotSpecified' }];
+const USER_MANUAL_TEXT = <Text>
+{'\n'}
+Registration
+How to register?
+To register, click on 'I don't have an account yet', in the Login page — this should bring you to a screen requesting an email, a password, as well a confirmation of that password. Please note that the password must be at least 6 characters long, and must contain at least one of each of: a capital letter, a number, and a special character (like !, ? or $). There is also a password strength checker that shows you the strength of your currently input password. Note that you must be over 18 to register, and must have a valid university email account we can validate.
+{'\n'}
+{'\n'}
+How to validate?
+This happens automatically — next, your email will be checked for whether it's currently registered with the University of Aberdeen. You will next be prompted to a personal data input screen, for further identity check purposes.
+{'\n'}
+{'\n'}
+Does my personal data need to be accurate?
+To the best of your ability, yes. This is so that we can authenticate your identity as a real person — rest assured that your data is not being used for advertising purposes or being sold. Note that while the date of birth should be accurate — so that we can ensure your age meets the requirements — your gender can be a personal preference.
+{'\n'}
+{'\n'}
+What next?
+Once you've registered, you will be prompted to user profile creation — where you can establish how you want your profile to look to other users, as well as select what interests and hobbies you have and want to connect with other users on. Your avatar can be selected from a range of randomly generated ones.
+{'\n'}
+{'\n'}
+Login
+How do I log in?
+To log in, you must have registered an account — note that you only need to register once. If you've already done so, input your email and password on the main login screen, and press the login button — if you are on the registration screen, simply press 'I already have an account.'
+{'\n'}
+{'\n'}
+I forgot my password
+If you forgot your password, press 'I forgot my password.' This will prompt you to put in your email, and a password reset link will be sent to it shortly. Note that this may take some time, and could end up in the spam folder. Never open a password reset link if you have not requested one yourself.
+{'\n'}
+{'\n'}
+Opening the link will prompt you to input a new password as well as confirm it, with the same requirements as before. You can now use this password to log in.
+{'\n'}
+{'\n'}
+User Profile
+Where can I find my profile?
+Your profile can be accessed to view and edit from the bottom menu bar, on the left, when logged in — indicated by a head silhouette icon.
+{'\n'}
+{'\n'}
+How do I change my avatar/description/personal data?
+These can be accessed from your profile — your avatar and description can be edited any time by pressing the 'edit' button located within the profile view. To change your personal data, however, you must file a support request.
+{'\n'}
+{'\n'}
+How to set my interests?
+These can also be accessed from your profile. Below your description, you can begin selecting categories of interests by pressing the '+' button — and then, within those categories, specific interests. These will filter your 'nearby' search function, please be aware.
+{'\n'}
+{'\n'}
+What can other users see?
+Other users can see everything within your profile. As of right now, there are no selective privacy settings.
+{'\n'}
+{'\n'}
+Search
+Where can I search other users?
+This can be accessed from the bottom menu bar — it's the magnifying glass in the middle. This will take you to the search screen.
+{'\n'}
+{'\n'}
+How do I search?
+On the top of the screen, you will find a text input — this is where you can search for as many keywords as you wish, which will look through the interests of users to find matches. These users will show up below the top search bar in real time in a list.
+{'\n'}
+{'\n'}
+Below, are also the 'nearby' option and filters to search through users based on demographics.
+{'\n'}
+{'\n'}
+What are the available filters?
+You can filter users by their demographics — this includes gender, course being taken, as well as age and similar. Turning on these filters will limit the list of users below to only those who fit them.
+{'\n'}
+{'\n'}
+What is 'nearby'?
+This feature, when enabled, will search only users within a physical vicinity of your current location — for example, for when you want to meet up with someone quickly, spontaneously. Please note, that turning this on will begin sharing your location, making you visible to other users currently using 'nearby.'
+{'\n'}
+{'\n'}
+Social
+How to connect with a user I found?
+In the searched list of users, you can press a button on the right, indicated by a message icon. This will send a request to the user, asking them if they'd like to engage in a chat with you.
+{'\n'}
+{'\n'}
+Can I view their profile in full?
+As of right now, no, however, within the list, basic data about them will be visible, including their major interests and demographics.
+{'\n'}
+{'\n'}
+I've sent a request to chat, what now?
+Wait for the other user to accept your request — if they do, a prompt will appear in the chat screen, indicating you have begun a chat room with them. They can, however, decline a request, and if they do, you will also be notified of this.
+{'\n'}
+{'\n'}
+How to use the chat?
+It can be accessed through the last button on the bottom menu bar — the one on the left, indicated by a message icon. This will show a list of users who have accepted your chat request in recent time, and who you can chat with. Click on any one of these to open their chat window — here, you will find a standard screen including their messages on the left, as well as yours on the right, and a text input bar on the bottom to send messages with. Note that the main menu bar disappeared — return to the main screen using the back arrow button in the top left.
+{'\n'}
+{'\n'}
+I've been sent a chat request, what to do?
+You can either accept or decline this request, based on your preference to the user the app prompted a view of. Accepting will proceed as described in the previous point, and declining simply means the other user can't message you — there are no repercussions for it, and they can't request it again.
+{'\n'}
+{'\n'}
+How to report a user?
+If a user is suspicious, has harassed you, or otherwise caused you harm, you may report the user — this can be done with the button next to their nickname in the user search, in the same spot as requesting chat. A report will be sent to moderators who will handle your issue.
+{'\n'}
+{'\n'}
+Settings
+Where can I find the settings?
+You can find these in your profile — though there aren't many settings in the first place. You may turn on dark mode in the top-right corner, next to the edit profile and send support request buttons.
+{'\n'}
+{'\n'}
+What is dark mode?
+This changes the colour palette of the application to a darker one, also commonly known as a 'night' mode.
+{'\n'}
+{'\n'}
+Further Help
+How to contact us
+You may send in a support request through the request support button in your profile view. This will prompt a text input, where you can provide a description of your issue, which will be sent to an administrator to deal with.
+{'\n'}
+{'\n'}
+ </Text>
 
 var ALL_INTERESTS = {
   "Animals": ["Bird", "Cat", "Dog", "Fish", "Hamster", "Rabbit", "Snake"],
@@ -41,7 +151,7 @@ var ALL_CATEGORIES = Object.keys(ALL_INTERESTS);
 const topIconsSize = 40;
 
 export default function Dashboard({ navigation }) {
-  // Definition and initialisation of the all data, storing all variables using React hooks
+// Definition and initialisation of the all data, storing all variables using React hooks
   const [user, loading, error] = useAuthState(auth);
   const [email, setEmail] = useState("");
   const [gender, setGender] = useState("");
@@ -58,7 +168,7 @@ export default function Dashboard({ navigation }) {
 
   const [themeColors, setThemeColors] = useState(global.theme);
 
-  // DATE PICKER methods
+  //DATE PICKER methods
   const openDatePicker = () => {
     setShowDatePicker(true)
   }
@@ -70,14 +180,14 @@ export default function Dashboard({ navigation }) {
     setDOB(output.dateString);
   }
 
-  // User manual visibility
+  //user manual visibility
   const [isUserManualVisible, setUserManualVisible] = useState(false);
   const toggleUserManual = () => {
     setUserManualVisible(!isUserManualVisible);
   };
 
 
-  // Load user data (when loading screen for the first time)
+  //load user data (when loading screen for the first time)
   const fetchUserEmail = async () => {
     try {
       const q = query(collection(db, "users"), where("uid", "==", user?.uid));
@@ -113,7 +223,7 @@ export default function Dashboard({ navigation }) {
     darkModeHandler();
   }
 
-  // Save user data to database
+  // save user data to database
   const confirmAllChanges = async () => {
     try {
       await updateDoc(doc(db, "users", user.uid), {
@@ -134,7 +244,7 @@ export default function Dashboard({ navigation }) {
     }
   }
 
-  // Displays the Interests buttons at the bottom of the screen
+  //displays the Interests buttons at the bottom of the screen
   const RenderInterests = () => {
     var buttonItems = [];
     var titles = [];
@@ -162,19 +272,25 @@ export default function Dashboard({ navigation }) {
       }
       if (alreadySelectedItems.indexOf(t) > -1)
         alreadySelected = 1;
+      /*if (isPreviousInterest && isCategory){
+        buttonItems.push(
+          <View style={{flex:1, marginRight:"auto", flexDirection:"row",
+          justifyContent:'flex-end', flexGrow:1, flexBasis:"auto"}}/>
+        )
+      }*/
       buttonItems.push(
         <InterestButton
           title={t}
           selected={alreadySelected}
           isCat={(ALL_CATEGORIES.indexOf(t) > -1)}
           col={buttonColor}
-          hasMargin={(isPreviousInterest && isCategory)} />
+          hasMargin = {(isPreviousInterest && isCategory)}/>
       );
       isPreviousInterest = !isCategory;
     }
     return (buttonItems);
   }
-  // One interest button, object called in the previous function
+  //one interest button, object called in the previous function
   const InterestButton = (props) => {
     var weight = "normal";
     if (props.selected == 1) {
@@ -190,7 +306,7 @@ export default function Dashboard({ navigation }) {
           borderWidth: 3 * props.selected,
           marginTop: 2 - 1.5 * (props.selected - 1),
           marginBottom: -1.5 * (props.selected - 1),
-          marginLeft: props.hasMargin ? 30 : 1
+          marginLeft: props.hasMargin?30:1
         }} onPress={() => toggleModalButton(props.title,
           props.isCat, (props.selected == 1))}>
         <View style={{ alignSelf: 'center', padding: 6 }}>
@@ -199,7 +315,7 @@ export default function Dashboard({ navigation }) {
       </TouchableOpacity>
     );
   }
-  // Method called when an interest is selected/unselected
+  //method called when an interest is selected/unselected
   const toggleModalButton = (title, isCategory, alreadySelected) => {
     if (isCategory) {
       var newCategories = [...categories];
@@ -231,12 +347,11 @@ export default function Dashboard({ navigation }) {
     }
   }
 
-  // Switch the gender when the user clicks on the component
   const toggleGender = () => {
     var newGenderValue;
     var genderIndex = GENDERS.indexOf(gender);
     var endLoop = GENDERS.length;
-    for (genderIndex = 0; genderIndex < endLoop; genderIndex++) {
+    for (genderIndex=0; genderIndex<endLoop; genderIndex++) {
       if (GENDERS[genderIndex].value == gender) {
         endLoop = -1;
       }
@@ -257,7 +372,6 @@ export default function Dashboard({ navigation }) {
     return (r);
   }
 
-  // Navigation handlers
   const logOutHandler = () => {
     logout()
     navigation.navigate('Login');
@@ -268,12 +382,12 @@ export default function Dashboard({ navigation }) {
     navigation.navigate('Support');
   }
 
-  // Toggle the user manual
+  //toggle the user manual
   const helpHandler = () => {
     setUserManualVisible(true);
   }
 
-  // Toggle dark mode
+  //toggle dark mode
   const darkModeHandler = () => {
     global.darkMode = !global.darkMode;
     setDarkMode(global.darkMode);
@@ -285,7 +399,7 @@ export default function Dashboard({ navigation }) {
     setThemeColors(global.theme);
   }
 
-  // Call the fetchUserEmail in a loop
+
   useEffect(() => {
     if (loading) return;
     if (!user) return navigation.navigate("/");
@@ -295,87 +409,43 @@ export default function Dashboard({ navigation }) {
 
 
 
-  // Main return function,
-  // Where the RenderInterest object and all the previous methods are used
+  //main return function,
+  //where the RenderInterest object and all the previous methods are used
   return (
     <View style={[styles.container, { backgroundColor: themeColors.backgroundColor }]}>
 
-      {/* User manual */}
       <Modal isVisible={isUserManualVisible}>
-        <ScrollView>
-          <View style={{ flex: 1, backgroundColor: themeColors.modalColor, borderRadius: 25 }}>
-            <Text style={{
-              fontSize: 25, fontWeight: "bold", alignSelf: 'center',
-              color: themeColors.textColor, marginTop: "10%"
-            }}>
-              {"User manual"}
-            </Text>
-            <View style={[styles.paragraph,
-            { color: themeColors.textColor }]}>
-              <Text style={{ fontWeight: "bold" }}>How to register?{"\n"}</Text>
-              <Text>To register, click on 'I don't have an account yet', in the Login page — this should bring you to a screen requesting an email, a password, as well a confirmation of that password. Please note that the password must be at least 6 characters long, and must contain at least one of each of: a capital letter, a number, and a special character (like !, ? or $). There is also a password strength checker that shows you the strength of your currently input password. Note that you must be have a valid university email account we can validate.</Text>
-              <Text style={{ fontWeight: "bold" }}>{"\n"}How to validate?{"\n"}</Text>
-              <Text>This happens automatically — next, your email will be checked for whether it's currently registered with the University of Aberdeen. You will next be prompted to a personal data input screen, for further identity check purposes.</Text>
-              <Text style={{ fontWeight: "bold" }}>{"\n"}Does my personal data need to be accurate?{"\n"}</Text>
-              <Text>To the best of your ability, yes. This is so that we can authenticate your identity as a real person — rest assured that your data is not being used for advertising purposes or being sold. Note that while the date of birth should be accurate — so that we can ensure your age meets the requirements — your gender can be a personal preference.</Text>
-              <Text style={{ fontWeight: "bold" }}>{"\n"}What next?{"\n"}</Text>
-              <Text>Once you've registered, you will be prompted to user profile creation — where you can establish how you want your profile to look to other users, as well as select what interests and hobbies you have and want to connect with other users on. Your avatar can be selected from a range of randomly generated ones.</Text>
-              <Text style={{ fontWeight: "bold" }}>{"\n"}How do I log in?{"\n"}</Text>
-              <Text>To log in, you must have registered an account — note that you only need to register once. If you've already done so, input your email and password on the main login screen, and press the login button — if you are on the registration screen, simply press 'I already have an account.'</Text>
-              <Text style={{ fontWeight: "bold" }}>{"\n"}I forgot my password{"\n"}</Text>
-              <Text>If you forgot your password, press 'I forgot my password.' This will prompt you to put in your email, and a password reset link will be sent to it shortly. Note that this may take some time, and could end up in the spam folder. Never open a password reset link if you have not requested one yourself.Opening the link will prompt you to input a new password as well as confirm it, with the same requirements as before. You can now use this password to log in.</Text>
-              <Text style={{ fontWeight: "bold" }}>{"\n"}How to set my interests?{"\n"}</Text>
-              <Text>These can also be accessed from your profile. Below your description, you can begin selecting categories of interests by pressing the '+' button — and then, within those categories, specific interests. These will filter your 'nearby' search function, please be aware.</Text>
-              <Text style={{ fontWeight: "bold" }}>{"\n"}Where can I find my profile?{"\n"}</Text>
-              <Text>Your profile can be accessed to view and edit from the bottom menu bar, on the left, when logged in — indicated by a head silhouette icon. </Text>
-              <Text style={{ fontWeight: "bold" }}>{"\n"}What can other users see?{"\n"}</Text>
-              <Text>Other users can see everything within your profile. As of right now, there are no selective privacy settings.</Text>
-              <Text style={{ fontWeight: "bold" }}>{"\n"}How do I change my avatar/description/personal data?{"\n"}</Text>
-              <Text>These can be accessed from your profile — your avatar and description can be edited any time by pressing the 'edit' button located within the profile view. To change your personal data, however, you must file a support request.</Text>
-              <Text style={{ fontWeight: "bold" }}>{"\n"}Where can I search for other users?{"\n"}</Text>
-              <Text>This can be accessed from the bottom menu bar — it's the magnifying glass in the middle. This will take you to the search screen.</Text>
-              <Text style={{ fontWeight: "bold" }}>{"\n"}How do I search?{"\n"}</Text>
-              <Text>On the top of the screen, you will find a text input — this is where you can search for as many keywords as you wish, which will look through the interests of users to find matches. These users will show up below the top search bar in real time in a list. Below, are also the 'nearby' option and filters to search through users based on demographics.</Text>
-              <Text style={{ fontWeight: "bold" }}>{"\n"}What are the available filters?{"\n"}</Text>
-              <Text>You can filter users by their demographics — this includes gender, course being taken, as well as age and similar. Turning on these filters will limit the list of users below to only those who fit them.</Text>
-              <Text style={{ fontWeight: "bold" }}>{"\n"}What is 'nearby'?{"\n"}</Text>
-              <Text>This feature, when enabled, will search only users within a physical vicinity of your current location — for example, for when you want to meet up with someone quickly, spontaneously. Please note, that turning this on will begin sharing your location, making you visible to other users currently using 'nearby.'</Text>
-              <Text style={{ fontWeight: "bold" }}>{"\n"}What is dark mode?{"\n"}</Text>
-              <Text>This changes the colour palette of the application to a darker one, also commonly known as a 'night' mode. </Text>
-              <Text style={{ fontWeight: "bold" }}>{"\n"}How to contact us{"\n"}</Text>
-              <Text>You may send in a support request through the request support button in your profile view. This will prompt a text input, where you can provide a description of your issue, which will be sent to an administrator to deal with.</Text>
-            </View >
+      <ScrollView>
+        <View style={{ flex: 1, backgroundColor:themeColors.modalColor, borderRadius:25 }}>
+          <Text style={{fontSize:25, fontWeight:"bold", alignSelf:'center',
+              color: themeColors.textColor, marginTop:20, marginBottom:5}}>
+            {"User manual"}
+          </Text>
+          <Text style={[styles.paragraph,
+              { marginVertical:10, color: themeColors.textColor }]}>
+            {USER_MANUAL_TEXT}
+          </Text >
 
-            {/* Support buttons*/}
-            <TouchableOpacity
-              style={[styles.confirmButton, {
-                height: "1.2%",
-                backgroundColor: themeColors.buttonColor
-              }]}
-              onPress={supportHandler}>
-              <Text style={[styles.heading, { color: themeColors.textColor }]}>
-                {"Support Screen"}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.confirmButton, {
-                height: "1.2%",
-                backgroundColor: themeColors.buttonColor
-              }]}
-              onPress={() => toggleUserManual()}>
-              <Text style={[styles.heading, { color: themeColors.textColor }]}>
-                {"Close User Manual"}
-              </Text>
-            </TouchableOpacity>
-            <Text></Text>
-            <Text></Text>
-            <Text></Text>
-            <Text></Text>
-          </View>
+          <TouchableOpacity
+            style={[styles.confirmButton, { height: 30,
+              backgroundColor: themeColors.buttonColor }]}
+            onPress={() => toggleUserManual()}>
+            <Text style={[styles.heading, { color: themeColors.textColor }]}>
+              {"Close User Manual"}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.confirmButton, { height: 30,
+              backgroundColor: themeColors.buttonColor }]}
+            onPress={supportHandler}>
+            <Text style={[styles.heading, { color: themeColors.textColor }]}>
+              {"Support Screen"}
+            </Text>
+          </TouchableOpacity>
+        </View>
         </ScrollView>
       </Modal>
 
-      {/* Date Picker component */}
       <DatePicker
         isVisible={showDatePicker}
         dateStringFormat='dd/MM/yyyy'
@@ -384,9 +454,10 @@ export default function Dashboard({ navigation }) {
         onConfirm={onDateConfirm}
         maxDate={new Date()}
       />
-
-      {/* Left bar with Dark mode, user manaul and support and logout button  */}
-      <View style={{ alignSelf: 'flex-start', marginTop: '10%', }}>
+      <View style={{
+        alignSelf: 'flex-start',
+        marginTop: '10%',
+      }}>
         <TouchableOpacity style={[styles.settingsButton, { color: themeColors.buttonColor, tintColor: themeColors.buttonColor }]} onPress={darkModeHandler}>
           <DarkModeIcon />
         </TouchableOpacity>
@@ -398,8 +469,8 @@ export default function Dashboard({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      {/* Avatar */}
       <View style={styles.nameContainer}>
+
         <Avatar
           rounded
           title={nameToInitials(firstName, lastName)}
@@ -408,19 +479,16 @@ export default function Dashboard({ navigation }) {
             uri: 'https://api.multiavatar.com/' + avatar + '.png'
           }}
         />
-        {/* First Name Text Input */}
         <TextInput
           style={[styles.heading, { color: themeColors.textColor }]}
           defaultValue={firstName}
           onChangeText={firstName => setFirstName(firstName)}
         />
-        {/* Last Name Text Input */}
         <TextInput
           style={[styles.heading, { color: themeColors.textColor }]}
           defaultValue={lastName}
           onChangeText={lastName => setLastName(lastName)}
         />
-        {/* Open date picker */}
         <TouchableOpacity
           onPress={() => openDatePicker()}>
           <Text
@@ -430,7 +498,6 @@ export default function Dashboard({ navigation }) {
           </Text>
         </TouchableOpacity>
 
-        {/* Open gender selector */}
         <TouchableOpacity
           onPress={() => toggleGender()}>
           <Text style={[styles.heading, { color: themeColors.textColor }]}>
@@ -438,23 +505,22 @@ export default function Dashboard({ navigation }) {
           </Text>
         </TouchableOpacity>
 
-        {/* Display university */}
         <Text style={[styles.heading, { color: themeColors.textColor }]}>
           {university}
         </Text>
       </View>
 
-      {/* Display and set user's description max 150 characters */}
       <View style={styles.columns}>
         <ScrollView>
           <TextInput
-            style={styles.paragraph}
+            style={[styles.paragraph, { marginVertical: -20, color: themeColors.textColor,
+              height: 100, }]}
             defaultValue={description}
             onChangeText={description => setDescription(description)}
-            multiline={true} maxLength={150}
+            multiline={true}
           />
 
-          {/* Display and set user's interests */}
+
           <View style={styles.interestContainer}>
             <Text style={[styles.interestHeading, { color: themeColors.textColor }]}>
               Interests:
@@ -462,9 +528,9 @@ export default function Dashboard({ navigation }) {
             <View style={styles.rows}>
               <RenderInterests />
             </View>
+
           </View>
 
-          {/* Confirm changes button. This button will save all the information*/}
           <TouchableOpacity
             style={[styles.confirmButton, { height: 30, backgroundColor: themeColors.buttonLightColor }]}
             onPress={() => confirmAllChanges()}>
@@ -484,9 +550,9 @@ var styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    paddingTop: "1%",
-    marginTop: "5%",
-    padding: "3%",
+    paddingTop: 10,
+    marginTop: 20,
+    padding: 8,
   },
   styleAvatar: {
     width: '65%',
@@ -495,8 +561,8 @@ var styles = StyleSheet.create({
   },
   columns: {
     flex: 3,
-    marginTop: "40%",
-    marginHorizontal: "2%",
+    marginTop: 170,
+    marginHorizontal: 10,
     justifyContent: 'flex-start',
     flexDirection: 'column',
   },
@@ -510,10 +576,11 @@ var styles = StyleSheet.create({
   },
 
   interestContainer: {
-    marginTop: "5%",
+    marginTop: 15,
   },
 
   heading: {
+    margin: 0,
     fontSize: 18,
     paddingHorizontal: 10,
     marginTop: 1,
@@ -531,9 +598,9 @@ var styles = StyleSheet.create({
   },
 
   paragraph: {
-    marginTop: "3%",
+    marginHorizontal: 20,
+    marginTop: 10,
     fontSize: 14,
-    padding: "4%",
   },
 
   settingsButton: {
@@ -547,6 +614,7 @@ var styles = StyleSheet.create({
 
   rows: {
     flex: 1,
+    marginTop: 0,
     alignContent: 'center',
     alignSelf: 'flex-start',
     justifyContent: 'flex-start',
@@ -555,9 +623,10 @@ var styles = StyleSheet.create({
   },
   confirmButton: {
     borderRadius: 15,
+    marginHorizontal: 2,
     alignSelf: 'center',
     justifyContent: 'center',
-    marginTop: "10%",
+    marginTop: 20,
   },
 
 });
