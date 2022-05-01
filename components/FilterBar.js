@@ -45,49 +45,50 @@ export default class FilterBar extends React.Component {
     render() {
         return (
             <View style={styles.filterBar}>
-                <View style={styles.filterSection}>
-                    <Text>only nearby: </Text>
-                    <Switch style={styles.switch}
-                        trackColor={{ false: "#767577", true: "lightgrey" }}
-                        thumbColor={!this.state.isNearby ? "blue" : "#f4f3f4"}
-                        ios_backgroundColor="#3e3e3e"
-                        onValueChange={this.toggleSwitch}
-                        value={!this.state.isNearby}
-                    />
+                <View style={{flexDirection:'row'}}>
+                    <View style={styles.filterSection}>
+                        <Text>Gender: </Text>
+                        <SelectDropdown
+                            defaultButtonText={'all'}
+                            renderDropdownIcon={() => {
+                                return (
+                                    <Icon
+                                        name="chevron-down"
+                                        size={18}
+                                        color="#444"
+                                    />
+                                );
+                            }}
+                            dropdownIconPosition={"right"}
+                            data={this.state.genders}
+                            onSelect={(selectedItem, index) => {
+                                this.props.updateGender([selectedItem.value])
+                            }}
+                            buttonTextAfterSelection={(selectedItem, index) => {
+                                return selectedItem.label
+                            }}
+                            rowTextForSelection={(item, index) => {
+                                return item.label
+                            }}
+                            buttonStyle={styles.dropdown1BtnStyle}
+                            buttonTextStyle={styles.dropdown1BtnTxtStyle}
+                            dropdownStyle={styles.dropdown1DropdownStyle}
+                            rowStyle={styles.dropdown1RowStyle}
+                            rowTextStyle={styles.dropdown1RowTxtStyle}
+                        />
+                    </View>
+                    <View style={styles.filterSection}>
+                        <Text>only nearby: </Text>
+                        <Switch style={styles.switch}
+                            trackColor={{ false: "#767577", true: "lightgrey" }}
+                            thumbColor={!this.state.isNearby ? "blue" : "#f4f3f4"}
+                            ios_backgroundColor="#3e3e3e"
+                            onValueChange={this.toggleSwitch}
+                            value={!this.state.isNearby}/>
+                    </View>
                 </View>
                 <View style={styles.filterSection}>
-                    <Text>gender: </Text>
-                    <SelectDropdown
-                        defaultButtonText={'all'}
-                        renderDropdownIcon={() => {
-                            return (
-                                <Icon
-                                    name="chevron-down"
-                                    size={18}
-                                    color="#444"
-                                />
-                            );
-                        }}
-                        dropdownIconPosition={"right"}
-                        data={this.state.genders}
-                        onSelect={(selectedItem, index) => {
-                            this.props.updateGender([selectedItem.value])
-                        }}
-                        buttonTextAfterSelection={(selectedItem, index) => {
-                            return selectedItem.label
-                        }}
-                        rowTextForSelection={(item, index) => {
-                            return item.label
-                        }}
-                        buttonStyle={styles.dropdown1BtnStyle}
-                        buttonTextStyle={styles.dropdown1BtnTxtStyle}
-                        dropdownStyle={styles.dropdown1DropdownStyle}
-                        rowStyle={styles.dropdown1RowStyle}
-                        rowTextStyle={styles.dropdown1RowTxtStyle}
-                    />
-                </View>
-                <View style={styles.filterSection}>
-                    <Text>field of study: </Text>
+                    <Text>Field of study: </Text>
                     <SelectDropdown
                         defaultButtonText={'all'}
                         renderDropdownIcon={() => {
