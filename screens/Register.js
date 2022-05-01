@@ -68,7 +68,7 @@ export default function App({ navigation, route }) {
             {/*Email field component */}
             <TextInput
               style={styles.TextInput}
-              placeholder="Email"
+              placeholder="University email"
               placeholderTextColor="#003f5c"
               onChangeText={(email) => setEmail(email)}
             />

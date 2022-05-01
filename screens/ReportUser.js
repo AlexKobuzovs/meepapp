@@ -18,17 +18,13 @@ export default function ReportUser({ navigation, route }) {
 
 // Definition and initialisation of the all data, storing all variables using React hooks
 	const [description, setDescription] = useState("");
-	const [lastName, setLastName] = useState("");
 	const [report, setReport] = useState("");
-	const [categories, setCategories] = useState("");
-	const [interests, setInterests] = useState("");
-	const [user, loading, error] = useAuthState(auth);
 	const user1 = auth.currentUser.uid;
 
 	const {uid} = route.params;
 
 	{/*Definition of the genders*/ }
-	const genders = [
+	const type = [
 		{ label: 'Nudes', value: 'Nudes' },
 		{ label: 'Language', value: 'Language' },
 		{ label: 'Fake Information', value: 'Fake Information' },
@@ -49,8 +45,12 @@ export default function ReportUser({ navigation, route }) {
 					reason: report,
 					description: description,
 				});
-				loginScreen()
-				alert("User has been reported")
+				if (description && report){
+					loginScreen()
+					alert("User has been reported")
+				}
+				else
+					alert('Failed to submit the report. Please try again.')
 			}
 			catch (err){
 				console.error(err)
@@ -87,7 +87,7 @@ export default function ReportUser({ navigation, route }) {
 							style={styles.TextInput}
 							placeholder="Please provide a description of a problem"
 							placeholderTextColor="#003f5c"
-							onChangeText={firstName => setDescription(firstName)}
+							onChangeText={description => setDescription(description)}
 						/>
 					</View>
 
@@ -98,7 +98,7 @@ export default function ReportUser({ navigation, route }) {
 							useNativeAndroidPickerStyle={true}
 							placeholder={{ label: "Choose category", value: null }}
 							onValueChange={(itemValue, itemIndex) => setReport(itemValue)}
-							items={genders}
+							items={type}
 						/>
 					</View>
 

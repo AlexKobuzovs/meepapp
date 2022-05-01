@@ -3,12 +3,8 @@ import { useState, useCallback, useEffect, useLayoutEffect } from 'react'
 import { View, ActivityIndicator, StyleSheet, Text } from 'react-native';
 import { SafeAreaView } from 'react-native';
 import { GiftedChat, InputToolbar } from 'react-native-gifted-chat';
-import { useAuthState } from "react-firebase-hooks/auth";
-import { initializeApp } from 'firebase/app';
 import { db, auth, storage } from '../firebase/firebase-cfg';
 import { getFirestore, getDocs, collection, getDoc, doc, onSnapshot, query, forEach, where, orderBy, addDoc, setDoc, Timestamp, updateDoc } from 'firebase/firestore';
-import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
-import Messages from './Messages.js'
 import '../components/Styles';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -18,12 +14,8 @@ import { useFocusEffect } from '@react-navigation/native';
 const Chat = ({ user, route, navigation }) => {
   // Definition and initialisation of the messages in the chat, storing all variables using React hooks
   const [messages, setMessages] = useState([]);
-  const { uid } = route.params;
-  const [chat, setChat] = useState("");
-  const [text, setText] = useState("");
-  const [img, setImg] = useState("");
+  const { uid } = route.params; 
   const [isLoading, setIsLoading] = useState(false);
-  const [email, setEmail] = useState("");
   const user1 = auth.currentUser.uid;
   const docid = uid > user1 ? user1 + "-" + uid : uid + "-" + user1
 

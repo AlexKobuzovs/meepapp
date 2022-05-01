@@ -44,9 +44,11 @@ export default function Messages({ navigation, route }) {
 
   // Definition of all the genders
   const genders = [
-		{ label: 'Male', value: 'Male' },
-		{ label: 'Female', value: 'Female' },
-		{ label: 'Other', value: 'Other' }];
+    { label: 'Male', value: 'Male' },
+    { label: 'Female', value: 'Female' },
+    { label: 'Non-Binary', value: 'non-binary' },
+    { label: 'Other', value: 'other' },
+    { label: 'I prefer not to say', value: 'notSpecified' }];
 
   // Fetching Users collection
   useEffect(() => {
@@ -94,7 +96,7 @@ export default function Messages({ navigation, route }) {
           console.log(err)
         }
 
-        const q2 = query(collection(db, "users"), where("uid", "!=", user?.uid), where("localisation", "==", hash));
+        const q2 = query(collection(db, "users"), where("uid", "not-in", [user1]), where("localisation", "==", hash));
         const unsub3 = onSnapshot(q2, (querySnapshot) => {
           let users = [];
           querySnapshot.forEach((doc) => {
