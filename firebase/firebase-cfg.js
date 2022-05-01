@@ -22,12 +22,12 @@ import {
 } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 const firebaseConfig = {
-  apiKey: "AIzaSyBpz2hoJIAmdPnogETtZ10T3qZl9mQfEXM",
-  authDomain: "meepmaindb.firebaseapp.com",
-  projectId: "meepmaindb",
-  storageBucket: "meepmaindb.appspot.com",
-  messagingSenderId: "705448556266",
-  appId: "1:705448556266:web:20ebd2451dc2853b574993"
+  apiKey: "AIzaSyBY28H3F7PvgK_U9UAXAhTBvqdRIJ2MMck",
+  authDomain: "meepfinaldb.firebaseapp.com",
+  projectId: "meepfinaldb",
+  storageBucket: "meepfinaldb.appspot.com",
+  messagingSenderId: "12024149993",
+  appId: "1:12024149993:web:355a3e1992774f595d7d78"
 };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
